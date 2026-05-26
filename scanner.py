@@ -14,21 +14,27 @@ def load_hosts(file_path):
     return hosts
 
 
-def ping_hosts(ip):
+def ping_host(ip):
     response = ping(ip, count=1)
     if response.success():
         latency = response.rtt_avg_ms
-        print(f"The ping was successful! {ip} is UP - {latency} ms")
-        return latency
+        return {"ip": ip, "status": "UP", "latency": latency}
     else:
-        print("The ping failed. Host was unreachable.")
-        return -1
+        return {"ip": ip, "status": "DOWN", "latency": -1}
+
+
+def scan_hosts(host_list):
+    results = []
+    for ip in host_list:
+        result = ping_host(ip)
+        results.append(result)
+    return results
 
 
 def main():
     hosts = load_hosts(HOSTS)
-    for ip in hosts:
-        ping_hosts(ip)
+    scan_results = scan_hosts(hosts)
+    print(scan_results)
 
 
 if __name__ == "__main__":
