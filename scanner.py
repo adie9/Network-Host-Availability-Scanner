@@ -15,11 +15,14 @@ def load_hosts(file_path):
 
 
 def ping_hosts(ip):
-    response = ping(ip, verbose=True)
+    response = ping(ip, count=1)
     if response.success():
-        print("The ping was successful!")
+        latency = response.rtt_avg_ms
+        print(f"The ping was successful! {ip} is UP - {latency} ms")
+        return latency
     else:
         print("The ping failed. Host was unreachable.")
+        return -1
 
 
 def main():
