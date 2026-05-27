@@ -1,4 +1,5 @@
 import csv
+from pathlib import Path
 from pythonping import ping
 
 HOSTS = "data/hosts.txt"
@@ -7,11 +8,19 @@ OUTPUT = "output/scan_results.csv"
 
 def load_hosts(file_path: str) -> list[str]:
     """
+    Checks if file exists. Proceeds normally if so.
+
     Loads a list of host IP addresses from a text file.
 
     Each non-empty line in the file is treated as a host entry.
     Whitespace is stripped automatically.
     """
+
+    file_path = Path(file_path)
+    if not file_path.exists():
+        print("File not found")
+        return []
+
     with open(file_path, "r") as f:
         hosts = []
         for line in f:
@@ -62,6 +71,9 @@ def save_results_to_csv(results: list[dict], output_path: str) -> None:
 
 def main() -> None:
     hosts = load_hosts(HOSTS)
+    if not hosts:
+        print("No hosts to scan. Exiting...")
+        return
     scan_results = scan_hosts(hosts)
     save_results_to_csv(scan_results, OUTPUT)
 
