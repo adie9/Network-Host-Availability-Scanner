@@ -1,7 +1,8 @@
+import csv
 from pythonping import ping
 
 HOSTS = "data/hosts.txt"
-OUTPUT = "output.txt"
+OUTPUT = "output/scan_results.csv"
 
 
 def load_hosts(file_path: str) -> list[str]:
@@ -46,10 +47,23 @@ def scan_hosts(host_list: list[str]) -> list[dict]:
     return results
 
 
+def save_results_to_csv(results: list[dict], output_path: str) -> None:
+    """
+    Save scan results to a csv file.
+
+    The csv file will contain the columns: ip, status, latency_ms
+    """
+    with open(output_path, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["ip", "status", "latency_ms"])  # Header row
+        for result in results:
+            writer.writerow([result["ip"], result["status"], result["latency"]])
+
+
 def main() -> None:
     hosts = load_hosts(HOSTS)
     scan_results = scan_hosts(hosts)
-    print(scan_results)
+    save_results_to_csv(scan_results, OUTPUT)
 
 
 if __name__ == "__main__":
