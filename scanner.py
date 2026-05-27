@@ -14,8 +14,8 @@ def load_hosts(file_path: str) -> list[str]:
     with open(file_path, "r") as f:
         hosts = []
         for line in f:
-            line = line.strip()
-            if line:
+            line = line.strip()  # Remove whitespace
+            if line:  # Skip empty lines
                 hosts.append(line)
     return hosts
 
@@ -41,7 +41,7 @@ def scan_hosts(host_list: list[str]) -> list[dict]:
     """
     results = []
     for ip in host_list:
-        result = ping_host(ip)
+        result = ping_host(ip)  # Ping each host individually
         results.append(result)
     return results
 
